@@ -25,7 +25,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"TeX": {"Macros": {"kth": "{{k_\\mathrm{th}}}", "gcc": "{\\mathrm{g~cm^{-3}}}", "cms": "{\\mathrm{cm~s^{-1}}}", "presunit": "{\\mathrm{dyn~cm^{-2}}}", "accelunit": "{\\mathrm{cm~s^{-2}}}", "ergg": "{\\mathrm{erg~g^{-1}}}", "Ab": "{{\\bf A}}", "eb": "{{\\bf e}}", "Fb": "{{\\bf F}}", "gb": "{{\\bf g}}", "Hb": "{{\\bf H}}", "ib": "{{\\bf i}}", "Ib": "{{\\bf I}}", "Kb": "{{\\bf K}}", "lb": "{{\\bf l}}", "Lb": "{{\\bf L}}", "nb": "{{\\bf n}}", "Pb": "{{\\bf P}}", "Qb": "{{\\bf Q}}", "rb": "{{\\bf r}}", "Rb": "{{\\bf R}}", "Sb": "{{\\bf S}}", "ub": "{{\\bf u}}", "Ub": "{{\\bf U}}", "xb": "{{\\bf x}}", "dt": "{\\Delta t}", "omegadot": "{\\dot\\omega}", "inp": "{{\\rm in}}", "outp": "{{\\rm out}}", "sync": "{{\\rm sync}}", "half": "{\\frac{1}{2}}", "myhalf": "{\\half}", "nph": "{{n+\\myhalf}}", "kpp": "{\\ensuremath{\\kappa_{\\mathrm{P}}}}", "kpr": "{\\ensuremath{\\kappa_{\\mathrm{R}}}}", "kpf": "{\\ensuremath{\\kappa_{\\mathrm{F}}}}", "vb": "{\\boldsymbol{v}}", "vbt": "{\\widetilde{\\vb}}", "rbt": "{\\widetilde{\\rb}}", "ob": "{\\boldsymbol{\\omega}}", "nablab": "{\\boldsymbol{\\nabla}}", "avg": ["{{\\left \\langle #1 \\right \\rangle}}", 1]}}})</script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -101,6 +101,7 @@
 <li class="toctree-l1"><a class="reference internal" href="mpi_plus_x.html">Running Options: CPUs and GPUs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="FlowChart.html">Flowchart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="software.html">Software Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="problem_setups.html">Distributed Problem Setups</a></li>
 <li class="toctree-l1"><a class="reference internal" href="timestepping.html">Timestepping and Retries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="creating_a_problem.html">Setting Up Your Own Problem</a></li>
 <li class="toctree-l1"><a class="reference internal" href="io.html">Outputting</a></li>
@@ -129,6 +130,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="gpu_porting.html">Offloading a routine to GPU</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Hydrodynamics.html">Hydrodynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mhd.html">MHD</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gravity.html">Gravity</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diffusion.html">Diffusion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rotation.html">Rotation</a></li>
@@ -252,10 +254,17 @@ it.</p>
 </div>
 <div class="section" id="clang-tidy">
 <h3>Clang-tidy<a class="headerlink" href="#clang-tidy" title="Permalink to this headline">¶</a></h3>
-<p>We run <a class="reference external" href="https://clang.llvm.org/extra/clang-tidy/">clang-tidy</a> on all pull requests using a <a class="reference external" href="https://github.com/AMReX-Astro/cpp-linter-action">GitHub action</a>. <code class="docutils literal notranslate"><span class="pre">clang-tidy</span></code> analyzes the source code, produces warnings for potential bugs and offers suggestions for performance improvements.</p>
-<p>It can also be run locally. This requires the <code class="docutils literal notranslate"><span class="pre">clang-tidy</span></code> and <code class="docutils literal notranslate"><span class="pre">bear</span></code> packages, and the python script
-<code class="docutils literal notranslate"><span class="pre">run-clang-tidy.py</span></code> (which can be downloaded from <a class="reference external" href="https://github.com/AMReX-Astro/cpp-linter-action/blob/master/run-clang-tidy.py">here</a>). The analysis is performed by first compiling a problem using the <code class="docutils literal notranslate"><span class="pre">bear</span></code> package, then running the python script to analyze the source files. From within a problem directory, run</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bear make -j <span class="m">20</span> <span class="nv">USE_OMP</span><span class="o">=</span>FALSE <span class="nv">USE_MPI</span><span class="o">=</span>FALSE <span class="nv">DEBUG</span><span class="o">=</span>TRUE
+<p>We run <a class="reference external" href="https://clang.llvm.org/extra/clang-tidy/">clang-tidy</a> on all
+pull requests using a <a class="reference external" href="https://github.com/AMReX-Astro/cpp-linter-action">GitHub action</a>. <code class="docutils literal notranslate"><span class="pre">clang-tidy</span></code>
+analyzes the source code, produces warnings for potential bugs and
+offers suggestions for performance improvements.</p>
+<p>It can also be run locally. This requires the <code class="docutils literal notranslate"><span class="pre">clang-tidy</span></code> and
+<code class="docutils literal notranslate"><span class="pre">bear</span></code> packages, and the python script <code class="docutils literal notranslate"><span class="pre">run-clang-tidy.py</span></code> (which
+can be downloaded from <a class="reference external" href="https://github.com/AMReX-Astro/cpp-linter-action/blob/master/run-clang-tidy.py">here</a>). The
+analysis is performed by first compiling a problem using the <code class="docutils literal notranslate"><span class="pre">bear</span></code>
+package, then running the python script to analyze the source
+files. From within a problem directory, run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bear make <span class="nv">COMP</span><span class="o">=</span>llvm -j <span class="m">20</span> <span class="nv">USE_OMP</span><span class="o">=</span>FALSE <span class="nv">USE_MPI</span><span class="o">=</span>FALSE <span class="nv">DEBUG</span><span class="o">=</span>TRUE
 
 python3 run-clang-tidy.py -header-filter<span class="o">=</span><span class="s1">&#39;Castro&#39;</span> -ignore-files<span class="o">=</span><span class="s1">&#39;amrex|Microphysics&#39;</span> -j <span class="m">20</span> &gt; clang-tidy-report.txt
 </pre></div>
