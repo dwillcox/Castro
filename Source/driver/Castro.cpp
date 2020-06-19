@@ -201,11 +201,11 @@ Castro::variableCleanUp ()
 void
 Castro::read_params ()
 {
-    static bool done = false;
+    // static bool done = false;
 
-    if (done) return;
+    // if (done) return;
 
-    done = true;
+    // done = true;
 
     ParmParse pp("castro");
 
@@ -3308,7 +3308,8 @@ Castro::derive (const std::string& name,
 void
 Castro::amrinfo_init ()
 {
-   ca_amrinfo_init();
+  if (do_initialize_fortran)
+    ca_amrinfo_init();
 }
 
 void
@@ -3335,7 +3336,8 @@ Castro::extern_init ()
   }
 
   // read them in in Fortran
-  ca_extern_init(probin_file_name.dataPtr(),&probin_file_length);
+  if (do_initialize_fortran)
+    ca_extern_init(probin_file_name.dataPtr(),&probin_file_length);
 
   // grab them from Fortran to C++
   init_extern_parameters();

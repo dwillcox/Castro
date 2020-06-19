@@ -200,7 +200,8 @@ Castro::variableSetUp ()
   read_params();
 
   // Read in the input values to Fortran.
-  ca_set_castro_method_params();
+  if (do_initialize_fortran)
+    ca_set_castro_method_params();
 
   // Initialize the runtime parameters for any of the external
   // microphysics (these are the parameters that are in the &extern
@@ -228,13 +229,15 @@ Castro::variableSetUp ()
 
 
   // Initialize the network
-  ca_network_init();
+  if (do_initialize_fortran)
+    ca_network_init();
 #ifdef CXX_REACTIONS
   network_init();
 #endif
 
   // Initialize the EOS
-  ca_eos_init();
+  if (do_initialize_fortran)
+    ca_eos_init();
   eos_init();
 
   // Ensure that Castro's small variables are consistent
@@ -273,7 +276,8 @@ Castro::variableSetUp ()
 
 #ifdef REACTIONS
   // Initialize the burner
-  burner_init();
+  if (do_initialize_fortran)
+    burner_init();
 #endif
 
   // Initialize the amr info
@@ -292,7 +296,8 @@ Castro::variableSetUp ()
   const Real run_strt = ParallelDescriptor::second() ;
 
   // set the conserved, primitive, aux, and godunov indices in Fortran
-  ca_set_method_params(dm);
+  if (do_initialize_fortran)
+    ca_set_method_params(dm);
 
   // setup the passive maps -- this follows the same logic as the
   // Fortran versions in ca_set_method_params
@@ -337,9 +342,10 @@ Castro::variableSetUp ()
   ParmParse ppc("castro");
   ppc.queryarr("center",center,0,BL_SPACEDIM);
 
-  ca_set_problem_params(dm,phys_bc.lo(),phys_bc.hi(),
-                        Interior,Inflow,Outflow,Symmetry,SlipWall,NoSlipWall,coord_type,
-                        dgeom.ProbLo(),dgeom.ProbHi(),center.dataPtr());
+  if (do_initialize_fortran)
+    ca_set_problem_params(dm,phys_bc.lo(),phys_bc.hi(),
+                          Interior,Inflow,Outflow,Symmetry,SlipWall,NoSlipWall,coord_type,
+                          dgeom.ProbLo(),dgeom.ProbHi(),center.dataPtr());
 
   // Read in the parameters for the tagging criteria
   // and store them in the Fortran module.
@@ -351,7 +357,8 @@ Castro::variableSetUp ()
     probin_file_name[i] = probin_file[i];
   }
 
-  ca_get_tagging_params(probin_file_name.dataPtr(),&probin_file_length);
+  if (do_initialize_fortran)
+    ca_get_tagging_params(probin_file_name.dataPtr(),&probin_file_length);
 
 #ifdef SPONGE
   // Initialize the sponge
@@ -374,7 +381,8 @@ Castro::variableSetUp ()
 
   // Read in the ambient state parameters.
 
-  ca_get_ambient_params(probin_file_name.dataPtr(),&probin_file_length);
+  if (do_initialize_fortran)
+    ca_get_ambient_params(probin_file_name.dataPtr(),&probin_file_length);
 
   Interpolater* interp;
 
