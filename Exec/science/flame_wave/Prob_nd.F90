@@ -36,8 +36,17 @@ subroutine amrex_probinit (init, name, namlen, problo, probhi) bind(c)
 
   integer :: nx_model
   integer :: ng
+  integer :: index_z
 
   type(eos_t) :: eos_state
+
+  ! determine what index the "Z" coordinate is, assuming AMREX_SPACEDIM=3
+  ! but that the geometry could be R-Z or Cartesian.
+  if (problo(3) == -1.d200) then
+     index_z = 2
+  else
+     index_z = AMREX_SPACEDIM
+  endif
 
   ! get the problm parameters
   call probdata_init(name, namlen)
@@ -115,9 +124,9 @@ subroutine amrex_probinit (init, name, namlen, problo, probhi) bind(c)
   ! probhi(2) with nx_model zones.  But to allow for a interpolated
   ! lower boundary, we'll add 4 ghostcells to this, so we need to
   ! compute dx
-  nx_model = int((probhi(AMREX_SPACEDIM) - problo(AMREX_SPACEDIM))/dx_model)
+  nx_model = int((probhi(index_z) - problo(index_z))/dx_model)
 
-  !dx_model = (probhi(AMREX_SPACEDIM) - problo(AMREX_SPACEDIM))/nx_model
+  !dx_model = (probhi(index_z) - problo(index_z))/nx_model
   ng = 4
 
   ! now generate the initial models
@@ -134,7 +143,7 @@ subroutine amrex_probinit (init, name, namlen, problo, probhi) bind(c)
   model_params % low_density_cutoff = low_density_cutoff
 
   call init_1d_tanh(nx_model+ng, &
-                    problo(AMREX_SPACEDIM)-ng*dx_model, probhi(AMREX_SPACEDIM), &
+                    problo(index_z)-ng*dx_model, probhi(index_z), &
                     model_params, 1)
 
   ! store the model in the model_parser_module since that is used in
@@ -146,18 +155,18 @@ subroutine amrex_probinit (init, name, namlen, problo, probhi) bind(c)
   model_params % T_hi = model_params % T_hi + dtemp
 
   call init_1d_tanh(nx_model+ng, &
-                    problo(AMREX_SPACEDIM)-ng*dx_model, probhi(AMREX_SPACEDIM), &
+                    problo(index_z)-ng*dx_model, probhi(index_z), &
                     model_params, 2)
 
   ! set center
   center(:) = HALF * (problo(:) + probhi(:))
 
-#if AMREX_SPACEDIM == 2
-  ! for axisymmetry, put the x-center on the x-axis
-  ! and the y-center at 0, so the height computation is okay
-  center(1) = ZERO
-  center(2) = ZERO
-#endif
+  if (index_z == 2) then
+   ! for axisymmetry, put the x-center on the x-axis
+   ! and the y-center at 0, so the height computation is okay
+   center(1) = ZERO
+   center(2) = ZERO
+  endif
 
   ! set the ambient state for the upper boundary condition
   ambient_state(URHO) = gen_model_state(nx_model, idens_model, 1)
@@ -215,7 +224,15 @@ subroutine ca_initdata(lo, hi, &
   type (eos_t) :: eos_state
   real(rt) :: f
 
+  integer :: index_z
+
   !$gpu
+
+  if (problo(3) == -1.d200) then
+     index_z = 2
+  else
+     index_z = AMREX_SPACEDIM
+  endif
 
   do k = lo(3), hi(3)
      z = problo(3) + (dble(k) + HALF) * dx(3)
@@ -230,10 +247,10 @@ subroutine ca_initdata(lo, hi, &
            if (AMREX_SPACEDIM == 1) then
               r = 1.0_rt
               height = x
-           else if (AMREX_SPACEDIM == 2) then
+           else if (AMREX_SPACEDIM == 2 .or. index_z == 2) then
               r = x
               height = y
-           else if (AMREX_SPACEDIM == 3) then
+           else if (AMREX_SPACEDIM == 3 .and. index_z == 3) then
               r = sqrt(x**2 + y**2)
               height = z
            end if
