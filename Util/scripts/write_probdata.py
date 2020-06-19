@@ -258,9 +258,9 @@ def write_probin(probin_template, param_file, out_file):
                 for p in params:
                     if p.dtype != "character":
                         if p.is_array():
-                            fout.write("{}allocate({}({}))\n".format(indent, p.var, p.size))
+                            fout.write("{}if (.not. allocated({})) allocate({}({}))\n".format(indent, p.var, p.var, p.size))
                         else:
-                            fout.write("{}allocate({})\n".format(indent, p.var))
+                            fout.write("{}if (.not. allocated({})) allocate({})\n".format(indent, p.var, p.var))
 
 
             elif keyword == "defaults":
