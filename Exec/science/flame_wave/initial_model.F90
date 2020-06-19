@@ -102,12 +102,12 @@ contains
 
     integer, intent(in) :: nx, num_models_in
 
-    allocate(gen_npts_model)
-    allocate(num_models)
+    if (.not. allocated(gen_npts_model)) allocate(gen_npts_model)
+    if (.not. allocated(num_models)) allocate(num_models)
 
     ! allocate storage for the model data
-    allocate (gen_model_state(nx, nvars_model, num_models_in))
-    allocate (gen_model_r(nx, num_models_in))
+    if (.not. allocated(gen_model_state)) allocate (gen_model_state(nx, nvars_model, num_models_in))
+    if (.not. allocated(gen_model_r)) allocate (gen_model_r(nx, num_models_in))
 
     gen_npts_model = nx
     num_models = num_models_in
