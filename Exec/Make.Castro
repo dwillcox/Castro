@@ -63,6 +63,12 @@ USE_ALL_CASTRO ?= TRUE
 
 USE_AMR_CORE ?= TRUE
 
+USE_PERMISSIVE_SPACEDIM ?= FALSE
+
+ifeq ($(USE_PERMISSIVE_SPACEDIM), TRUE)
+  DEFINES += -DAMREX_PERMISSIVE_SPACEDIM
+endif
+
 # hack for now -- CUDA processing doesn't respect functions blocked by
 # ifdefs, so we need to define EXTRA_THERMO
 ifeq ($(USE_CUDA),TRUE)
