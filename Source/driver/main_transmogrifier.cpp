@@ -76,7 +76,7 @@ main (int   argc,
 
         // Transmogrify A -> B level by level
         // this is kind of a hack - we really should refine each level as we go maybe?
-        for (int lev = 0; lev <= amrB->finest_level; ++lev) {
+        for (int lev = 0; lev <= amrB->finestLevel(); ++lev) {
             // transmogrify this level's data
         }
 
