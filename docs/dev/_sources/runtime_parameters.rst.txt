@@ -158,8 +158,9 @@ namespace: ``castro``
 | ``limit_fluxes_on_large_vel``          | Should we limit the momentum fluxes so that we do not   | 0             |
 |                                        | create large velocities?                                |               |
 +----------------------------------------+---------------------------------------------------------+---------------+
-| ``speed_limit``                        | If we're limiting the fluxes to avoid large velocities, | 2.99792458e10 |
-|                                        | this is the speed limit.                                |               |
+| ``speed_limit``                        | Enforce the magnitude of the velocity to be no larger   | 0.0           |
+|                                        | than this number (and optionally limit the fluxes as    |               |
+|                                        | well). Only applies if it is greater than 0.            |               |
 +----------------------------------------+---------------------------------------------------------+---------------+
 | ``do_sponge``                          | permits sponge to be turned on and off                  | 0             |
 +----------------------------------------+---------------------------------------------------------+---------------+
@@ -302,8 +303,7 @@ namespace: ``castro``
 | ``retry_subcycle_factor``              | When performing a retry, the factor to multiply the     | 0.5           |
 |                                        | current timestep by when trying again.                  |               |
 +----------------------------------------+---------------------------------------------------------+---------------+
-| ``use_post_step_regrid``               | Check for a possible post-timestep regrid if certain    | 0             |
-|                                        | stability criteria were violated.                       |               |
+| ``use_post_step_regrid``               | Regrid after every timestep.                            | 0             |
 +----------------------------------------+---------------------------------------------------------+---------------+
 | ``max_subcycles``                      | Do not permit more subcycled timesteps than this        | 10            |
 |                                        | parameter. Set to a negative value to disable this      |               |
@@ -392,7 +392,7 @@ namespace: ``castro``
 
 **gravity and rotation**
 
-.. index:: castro.do_grav, castro.moving_center, castro.grav_source_type, castro.do_rotation, castro.rotational_period, castro.rotational_dPdt, castro.rotation_include_centrifugal, castro.rotation_include_coriolis, castro.rotation_include_domegadt, castro.state_in_rotating_frame, castro.rot_source_type, castro.implicit_rotation_update, castro.rot_axis, castro.use_point_mass, castro.point_mass, castro.point_mass_fix_solution
+.. index:: castro.do_grav, castro.moving_center, castro.grav_source_type, castro.do_rotation, castro.rotational_period, castro.rotation_include_centrifugal, castro.rotation_include_coriolis, castro.state_in_rotating_frame, castro.rot_source_type, castro.implicit_rotation_update, castro.rot_axis, castro.use_point_mass, castro.point_mass, castro.point_mass_fix_solution
 
 
 +----------------------------------------+---------------------------------------------------------+---------------+
@@ -410,17 +410,11 @@ namespace: ``castro``
 +----------------------------------------+---------------------------------------------------------+---------------+
 | ``rotational_period``                  | the rotation period for the corotating frame            | -1.e200       |
 +----------------------------------------+---------------------------------------------------------+---------------+
-| ``rotational_dPdt``                    | the rotation periods time evolution---this allows the   | 0.0           |
-|                                        | rotation rate to change durning the simulation time     |               |
-+----------------------------------------+---------------------------------------------------------+---------------+
 | ``rotation_include_centrifugal``       | permits the centrifugal terms in the rotation to be     | 1             |
 |                                        | turned on and off                                       |               |
 +----------------------------------------+---------------------------------------------------------+---------------+
 | ``rotation_include_coriolis``          | permits the Coriolis terms in the rotation to be turned | 1             |
 |                                        | on and off                                              |               |
-+----------------------------------------+---------------------------------------------------------+---------------+
-| ``rotation_include_domegadt``          | permits the d(omega)/dt terms in the rotation to be     | 1             |
-|                                        | turned on and off                                       |               |
 +----------------------------------------+---------------------------------------------------------+---------------+
 | ``state_in_rotating_frame``            | Which reference frame to measure the state variables    | 1             |
 |                                        | with respect to. The standard in the literature when    |               |

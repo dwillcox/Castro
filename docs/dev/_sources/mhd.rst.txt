@@ -47,6 +47,16 @@ time-advancement driver as the hydrodynamic CTU driver
 (:ref:`sec:strangctu`), using Strang splitting for the reactions (by
 default).
 
+.. note::
+
+   Note: we are following the convention in the MHD community of setting the permeability to unity.  This is
+   why the magnetic pressure has the form :math:`\frac{1}{2} B^2` instead of :math:`\frac{1}{8\pi} B^2`.  In
+   effect, we are carrying our magnetic field as :math:`{\bf B}^\prime = {\bf B}/\sqrt{4\pi}`.
+
+   If you wish to express the magnetic field in Gauss, then you will need to multiply the value Castro carries
+   by :math:`\sqrt{4\pi}`.
+
+
 The constrained transport algorithm algebraically ensures that
 :math:`\nabla \cdot {\bf B} = 0`.  Throughout the algorithm, the
 magnetic fields are face-centered, the electric fields are
@@ -77,9 +87,10 @@ components.  This is done separately from the main conserved fluid
 state.
 
 The conserved fluid state is initialized in ``ca_initdata`` just as
-with pure hydrodynamics problems.  The one change is the when
-initializing the total energy density, ``UEDEN``, you need to include
-the magnetic energy contribution.
+with pure hydrodynamics problems. Note that you do not need to include 
+the magnetic energy contribution to the total energy density, ``UEDEN``.
+After this initialization, the driver handles the addition of the magnetic
+contribution.   
 
 
 Hydrodynamics Update
