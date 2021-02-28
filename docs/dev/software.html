@@ -33,7 +33,6 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"TeX": {"Macros": {"kth": "{{k_\\mathrm{th}}}", "gcc": "{\\mathrm{g~cm^{-3}}}", "cms": "{\\mathrm{cm~s^{-1}}}", "presunit": "{\\mathrm{dyn~cm^{-2}}}", "accelunit": "{\\mathrm{cm~s^{-2}}}", "ergg": "{\\mathrm{erg~g^{-1}}}", "Ab": "{{\\bf A}}", "eb": "{{\\bf e}}", "Fb": "{{\\bf F}}", "gb": "{{\\bf g}}", "Hb": "{{\\bf H}}", "ib": "{{\\bf i}}", "Ib": "{{\\bf I}}", "Kb": "{{\\bf K}}", "lb": "{{\\bf l}}", "Lb": "{{\\bf L}}", "nb": "{{\\bf n}}", "Pb": "{{\\bf P}}", "Qb": "{{\\bf Q}}", "rb": "{{\\bf r}}", "Rb": "{{\\bf R}}", "Sb": "{{\\bf S}}", "ub": "{{\\bf u}}", "Ub": "{{\\bf U}}", "xb": "{{\\bf x}}", "dt": "{\\Delta t}", "omegadot": "{\\dot\\omega}", "inp": "{{\\rm in}}", "outp": "{{\\rm out}}", "sync": "{{\\rm sync}}", "half": "{\\frac{1}{2}}", "myhalf": "{\\half}", "nph": "{{n+\\myhalf}}", "kpp": "{\\ensuremath{\\kappa_{\\mathrm{P}}}}", "kpr": "{\\ensuremath{\\kappa_{\\mathrm{R}}}}", "kpf": "{\\ensuremath{\\kappa_{\\mathrm{F}}}}", "vb": "{\\boldsymbol{v}}", "vbt": "{\\widetilde{\\vb}}", "rbt": "{\\widetilde{\\rb}}", "ob": "{\\boldsymbol{\\omega}}", "nablab": "{\\boldsymbol{\\nabla}}", "avg": ["{{\\left \\langle #1 \\right \\rangle}}", 1]}}})</script>
     
@@ -686,7 +685,7 @@ will look like:</p>
                    <span class="n">state</span><span class="p">,</span> <span class="n">ncomp</span><span class="p">,</span> <span class="p">&amp;</span>
                    <span class="n">s_lo</span><span class="p">,</span> <span class="n">s_hi</span><span class="p">)</span> <span class="k">bind</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;do_work&quot;</span><span class="p">)</span>
 
-  <span class="k">use </span><span class="n">prob_params_module</span><span class="p">,</span> <span class="n">only</span> <span class="p">:</span> <span class="n">dg</span>
+  <span class="k">use </span><span class="n">prob_params_module</span><span class="p">,</span> <span class="k">only</span> <span class="p">:</span> <span class="n">dg</span>
 
   <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lo</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">hi</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
   <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">s_lo</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">s_hi</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">ncomp</span>
@@ -703,9 +702,9 @@ will look like:</p>
            <span class="c">! work on state(i,j,k,:), where the last index</span>
            <span class="c">! is the component of the multifab</span>
 
-        <span class="n">enddo</span>
-     <span class="n">enddo</span>
-  <span class="n">enddo</span>
+        <span class="k">enddo</span>
+<span class="k">     enddo</span>
+<span class="k">  enddo</span>
 
 <span class="k">end subroutine </span><span class="n">do_work</span>
 </pre></div>
@@ -865,9 +864,9 @@ all around:</p>
            <span class="c">! work on state(i,j,k,:), where the last index</span>
            <span class="c">! is the component of the multifab</span>
 
-        <span class="n">enddo</span>
-     <span class="n">enddo</span>
-  <span class="n">enddo</span>
+        <span class="k">enddo</span>
+<span class="k">     enddo</span>
+<span class="k">  enddo</span>
 
 <span class="k">end subroutine </span><span class="n">do_work</span>
 </pre></div>
